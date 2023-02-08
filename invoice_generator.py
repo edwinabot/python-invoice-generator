@@ -2,6 +2,7 @@ import requests
 import json
 import pytz
 import locale
+import csv
 
 from datetime import datetime
 
@@ -168,3 +169,10 @@ class CustomField:
         """Object constructor"""
         self.name = name
         self.value = value
+
+
+if __name__ =='__main__':
+    with open('transactions.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            print(row)
