@@ -13,7 +13,7 @@ class InvoiceGenerator:
 
     URL = "https://invoice-generator.com"
     DATE_FORMAT = "%d %b %Y"
-    LOCALE = 'en_US.utf8'
+    LOCALE = "en_US.utf8"
     TIMEZONE = "UTC"
     # Below are the default template parameters that can be changed (see https://github.com/Invoiced/invoice-generator-api/)
     TEMPLATE_PARAMETERS = [
@@ -171,23 +171,30 @@ class CustomField:
         self.name = name
         self.value = value
 
+
 date_key = "Date (UTC)"
-description = 'Description'
-amount = 'Amount'
+description = "Description"
+amount = "Amount"
+
 
 def clean(record):
-    record[date_key] = datetime.strptime(record[date_key], '%m-%d-%Y').date()
+    record[date_key] = datetime.strptime(record[date_key], "%m-%d-%Y").date()
     record[amount] = float(record[amount])
     return record
 
-if __name__ =='__main__':
-    with open('transactions.csv', newline='') as csvfile:
+
+if __name__ == "__main__":
+    with open("transactions.csv", newline="") as csvfile:
         reader = csv.DictReader(csvfile)
         records = map(clean, reader)
         for i, row in enumerate(records):
             if row[amount] < 0:
                 continue
-            invoice = InvoiceGenerator("EA2 Consulting", to=row[description], date=row[date_key])
-            invoice.add_item(name="Consultative services", quantity=1, unit_cost=row[amount])
+            invoice = InvoiceGenerator(
+                "EA2 Consulting", to=row[description], date=row[date_key]
+            )
+            invoice.add_item(
+                name="Consultative services", quantity=1, unit_cost=row[amount]
+            )
             invoice.download(file_path=f"invoices/{row[date_key]}.pdf")
             time.sleep(1)
